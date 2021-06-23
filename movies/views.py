@@ -6,20 +6,26 @@ from movies.models import Movie, Actor
 
 class MoviesView(View):
     def get(self, request):
-        movies = Movie.objects.all()
         results = []
+        movies = Movie.objects.all()
         for movie in movies:
+            actor_arr = []
+            actors = movie.actors.all()
+            for i in actors:
+                actor_arr.append(i.first_name)
             results.append({
                 'title' : movie.title,
                 'release_date' : movie.release_date,
                 'running_time' : movie.running_time,
-                'actor' : list(movie.actors.values('first_name'))
+                'actor' : actor_arr
             })
         return JsonResponse({'results':results}, status=200)
+    
+
 
 class ActorsView(View):
     def get(self, request):
-        actors = Actor.objects.all()
+        actors  = Actor.objects.all()
         results = []
         for actor in actors:
             results.append({
@@ -29,3 +35,5 @@ class ActorsView(View):
                 'movies' : list(actor.movies.values('title'))
             })
         return JsonResponse({'results':results}, status=200)
+    
+
