@@ -6,18 +6,18 @@ from movies.models import Movie, Actor
 
 class MoviesView(View):
     def get(self, request):
-        movies = Movie.objects.all()
         results = []
+        movies = Movie.objects.all()
         for movie in movies:
-            actors = []
-            actor = movie.actors.values_list('first_name')
-            for i in range(len(actor)):
-                actors.append(actor[i][0])
+            actor_arr = []
+            actors = movie.actors.all()
+            for i in actors:
+                actor_arr.append(i.first_name)
             results.append({
                 'title' : movie.title,
                 'release_date' : movie.release_date,
                 'running_time' : movie.running_time,
-                'actor' : actors
+                'actor' : actor_arr
             })
         return JsonResponse({'results':results}, status=200)
     
